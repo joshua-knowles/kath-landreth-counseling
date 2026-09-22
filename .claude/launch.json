@@ -4,8 +4,8 @@
     {
       "name": "static-preview",
       "runtimeExecutable": "powershell.exe",
-      "runtimeArgs": ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "scripts/serve.ps1", "-Port", "4173"],
-      "port": 4173
+      "runtimeArgs": ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "scripts/serve.ps1", "-Port", "5180"],
+      "port": 5180
     }
   ]
 }
