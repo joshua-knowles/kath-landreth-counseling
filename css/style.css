@@ -381,7 +381,7 @@ p { margin: 0 0 1em; }
   border-radius: var(--radius-md);
   padding: 1.75rem;
   box-shadow: var(--shadow-soft);
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.2s ease;
 }
 
 .card:hover {
@@ -497,6 +497,22 @@ p { margin: 0 0 1em; }
      clipped against the top/bottom edge. */
   overflow: hidden;
   padding: 16px 3.25rem;
+  /* Fade the off-screen slides out gradually near the arrows instead of
+     hard-clipping them at the overflow edge. */
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 70px,
+    #000 calc(100% - 70px),
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 70px,
+    #000 calc(100% - 70px),
+    transparent 100%
+  );
 }
 
 .services-carousel.is-carousel .carousel-track {
@@ -523,9 +539,30 @@ p { margin: 0 0 1em; }
   z-index: 2;
 }
 
+/* The highlighted border marks whichever service is currently being
+   viewed, not a specific service, so it moves with the active slide
+   rather than being fixed to one card's markup. */
+.services-carousel.is-carousel .carousel-slide.is-active .card {
+  border: 2px solid var(--color-primary);
+}
+
 @media (max-width: 560px) {
   .services-carousel.is-carousel .carousel-viewport {
     padding: 16px 2.75rem;
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent 0,
+      #000 44px,
+      #000 calc(100% - 44px),
+      transparent 100%
+    );
+    mask-image: linear-gradient(
+      to right,
+      transparent 0,
+      #000 44px,
+      #000 calc(100% - 44px),
+      transparent 100%
+    );
   }
 
   .carousel-arrow {

@@ -143,9 +143,17 @@ function initServicesCarousel() {
   });
 
   function measure() {
-    var activeSlide = slides[current];
-    step = activeSlide.offsetWidth + SLIDE_GAP;
-    track.style.height = activeSlide.offsetHeight + "px";
+    // Size the track from the tallest/widest slide, not just the active
+    // one, so the carousel (and the arrow buttons pinned to its middle)
+    // stay a fixed size no matter which slide is showing.
+    var maxWidth = 0;
+    var maxHeight = 0;
+    slides.forEach(function (slide) {
+      if (slide.offsetWidth > maxWidth) maxWidth = slide.offsetWidth;
+      if (slide.offsetHeight > maxHeight) maxHeight = slide.offsetHeight;
+    });
+    step = maxWidth + SLIDE_GAP;
+    track.style.height = maxHeight + "px";
   }
 
   function render() {
