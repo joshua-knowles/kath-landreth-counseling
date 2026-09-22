@@ -382,11 +382,6 @@ p { margin: 0 0 1em; }
   padding: 1.75rem;
   box-shadow: var(--shadow-soft);
   transition: transform 0.15s ease, box-shadow 0.15s ease;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  height: 100%;
 }
 
 .card:hover {
@@ -397,19 +392,6 @@ p { margin: 0 0 1em; }
 .card-featured {
   border: 2px solid var(--color-primary);
   position: relative;
-}
-
-.card-featured-tag {
-  display: inline-block;
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  color: #fff;
-  background: var(--color-accent);
-  padding: 0.3em 0.75em;
-  border-radius: 999px;
-  margin-bottom: 0.9rem;
 }
 
 .card h3 {
