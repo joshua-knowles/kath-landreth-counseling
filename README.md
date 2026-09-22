@@ -51,7 +51,7 @@ To re-brand later, edit that one block:
   self-host the font files rather than loading from a third-party CDN,
   to keep the same privacy posture.
 
-## Data handling & email forwarding (important — read before launch)
+## Data handling & email forwarding (important: read before launch)
 
 The enquiry form on `contact.html` is designed as a **stateless relay**:
 
@@ -59,9 +59,14 @@ The enquiry form on `contact.html` is designed as a **stateless relay**:
   CRM. Nothing submitted through the form is ever stored by this
   codebase.
 - Fields collected are the minimum needed to start a conversation:
-  name, a preferred contact method (email or phone), and a free-text
-  message. There is deliberately no field implying diagnosis, referral
-  details, or health history.
+  name, an enquiry type (a dropdown, so Kath knows at a glance whether
+  it's about Ministry Supervision or personal counselling), a preferred
+  contact method (email or phone), and a free-text message. There is
+  deliberately no field implying diagnosis, referral details, or health
+  history. The enquiry-type dropdown currently holds generic placeholder
+  options ("Ministry Supervision", "Personal counselling", "Not sure
+  yet", "Something else") in `contact.html` and should be replaced once
+  Kath has a comprehensive service list.
 - The form currently points at a **placeholder** Formspree-style
   endpoint (`https://formspree.io/f/YOUR_FORM_ID` in `contact.html`),
   used only as an example of a privacy-respecting form-to-email service

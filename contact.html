@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Contact &amp; Booking — Kath Landreth Counselling &amp; Supervision</title>
-  <meta name="description" content="Placeholder description: Get in touch with Kath Landreth to arrange a first conversation. No data is stored — enquiries are sent directly by email." />
+  <title>Contact &amp; Booking: Kath Landreth Counselling &amp; Supervision</title>
+  <meta name="description" content="Placeholder description: Get in touch with Kath Landreth to arrange a first conversation. No data is stored; enquiries are sent directly by email." />
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
@@ -36,7 +36,7 @@
         <p class="hero-lede">
           Placeholder intro copy: Send a short message using the form
           below, or reach out directly by phone or email. There's no need
-          to explain everything up front — a first message is just the
+          to explain everything up front. A first message is just the
           start of a conversation.
         </p>
       </div>
@@ -46,7 +46,7 @@
       <div class="container contact-layout">
         <div>
           <!--
-            DATA HANDLING — read before deploying:
+            DATA HANDLING: read before deploying.
 
             This form is a stateless relay only. It must never write to a
             database, browser storage (localStorage/sessionStorage/cookies),
@@ -59,7 +59,7 @@
             privacy-respecting form-to-email service suited to a static
             site. TODO before launch:
               1. Decide Kath's actual hosting provider (GitHub Pages,
-                 Netlify, or Vercel) — see README.md "Data handling &
+                 Netlify, or Vercel). See README.md "Data handling &
                  email forwarding" section.
               2. If using Netlify: swap this <form> for Netlify Forms
                  (add `data-netlify="true"` and a matching `name`
@@ -83,15 +83,29 @@
           >
             <div class="privacy-note">
               This form is used only to arrange a first conversation.
-              Nothing you enter is stored on this site or anywhere
-              else — it's sent directly and only to Kath, by email.
-              Placeholder wording: to be reviewed by Kath / legal before
-              publishing.
+              Nothing you enter is stored on this site or anywhere else.
+              It's sent directly and only to Kath, by email. Placeholder
+              wording: to be reviewed by Kath / legal before publishing.
             </div>
 
             <div class="form-row">
               <label for="name">Your name</label>
               <input type="text" id="name" name="name" autocomplete="name" required />
+            </div>
+
+            <div class="form-row">
+              <label for="enquiry-type">What are you enquiring about?</label>
+              <!--
+                Placeholder options only. Replace with Kath's real,
+                comprehensive service list once confirmed (see README.md).
+              -->
+              <select id="enquiry-type" name="enquiry_type" required>
+                <option value="" disabled selected>Please select one</option>
+                <option value="Ministry Supervision">Ministry Supervision</option>
+                <option value="Personal Counselling">Personal counselling</option>
+                <option value="Not sure yet">Not sure yet</option>
+                <option value="Something else">Something else</option>
+              </select>
             </div>
 
             <div class="form-row">
@@ -103,7 +117,7 @@
             <div class="form-row">
               <label for="message">Your message</label>
               <textarea id="message" name="message" required></textarea>
-              <span class="hint">A few sentences is plenty — there's no need to go into detail here.</span>
+              <span class="hint">A few sentences is plenty. There's no need to go into detail here.</span>
             </div>
 
             <!-- Honeypot anti-spam field: left blank by real visitors, hidden via CSS. Holds no personal data. -->
@@ -135,9 +149,9 @@
             <h3>What happens next</h3>
             <p>
               Placeholder copy: Kath (or a member of her team) typically
-              responds within 1–2 business days. She'll reply by your
+              responds within 1 to 2 business days. She'll reply by your
               preferred contact method to arrange a short first
-              conversation — there's no obligation, and this first step
+              conversation. There's no obligation, and this first step
               doesn't commit you to ongoing sessions.
             </p>
           </div>
