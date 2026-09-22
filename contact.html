@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact &amp; Booking — Kath Landreth Counselling &amp; Supervision</title>
+  <meta name="description" content="Placeholder description: Get in touch with Kath Landreth to arrange a first conversation. No data is stored — enquiries are sent directly by email." />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  <header class="site-header">
+    <nav class="nav-bar" aria-label="Primary">
+      <a class="site-brand" href="index.html">
+        Kath Landreth
+        <span class="brand-sub">Counselling &amp; Supervision <span class="placeholder-flag">name TBD</span></span>
+      </a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-nav-links">
+        <span class="icon-bar"></span>
+        <span>Menu</span>
+      </button>
+      <ul class="nav-links" id="primary-nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About &amp; Services</a></li>
+        <li><a href="contact.html" aria-current="page">Contact &amp; Booking</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main-content">
+    <section class="hero">
+      <div class="container">
+        <span class="hero-eyebrow">Contact &amp; booking</span>
+        <h1>Let's start with a conversation.</h1>
+        <p class="hero-lede">
+          Placeholder intro copy: Send a short message using the form
+          below, or reach out directly by phone or email. There's no need
+          to explain everything up front — a first message is just the
+          start of a conversation.
+        </p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container contact-layout">
+        <div>
+          <!--
+            DATA HANDLING — read before deploying:
+
+            This form is a stateless relay only. It must never write to a
+            database, browser storage (localStorage/sessionStorage/cookies),
+            or any third-party CRM. The only allowed destination is a
+            form-to-email service that forwards the submission straight to
+            Kath's inbox and discards the payload afterwards.
+
+            PLACEHOLDER endpoint below uses the Formspree pattern
+            (https://formspree.io/f/YOUR_FORM_ID) purely as an example of a
+            privacy-respecting form-to-email service suited to a static
+            site. TODO before launch:
+              1. Decide Kath's actual hosting provider (GitHub Pages,
+                 Netlify, or Vercel) — see README.md "Data handling &
+                 email forwarding" section.
+              2. If using Netlify: swap this <form> for Netlify Forms
+                 (add `data-netlify="true"` and a matching `name`
+                 attribute) instead of Formspree, and remove the `action`
+                 URL below.
+              3. If using a serverless function (e.g. Vercel/Netlify
+                 function): point `action` at that function's endpoint,
+                 and make sure the function forwards to email only and
+                 stores nothing (no logs containing message content, no
+                 database writes).
+              4. Replace YOUR_FORM_ID with the real endpoint ID once a
+                 service is chosen, and update js/main.js's placeholder
+                 check accordingly.
+          -->
+          <form
+            class="contact-form"
+            id="enquiry-form"
+            action="https://formspree.io/f/YOUR_FORM_ID"
+            method="POST"
+            novalidate
+          >
+            <div class="privacy-note">
+              This form is used only to arrange a first conversation.
+              Nothing you enter is stored on this site or anywhere
+              else — it's sent directly and only to Kath, by email.
+              Placeholder wording: to be reviewed by Kath / legal before
+              publishing.
+            </div>
+
+            <div class="form-row">
+              <label for="name">Your name</label>
+              <input type="text" id="name" name="name" autocomplete="name" required />
+            </div>
+
+            <div class="form-row">
+              <label for="contact-method">Email or phone number</label>
+              <input type="text" id="contact-method" name="contact_method" autocomplete="email" required />
+              <span class="hint">However you'd prefer Kath to reply.</span>
+            </div>
+
+            <div class="form-row">
+              <label for="message">Your message</label>
+              <textarea id="message" name="message" required></textarea>
+              <span class="hint">A few sentences is plenty — there's no need to go into detail here.</span>
+            </div>
+
+            <!-- Honeypot anti-spam field: left blank by real visitors, hidden via CSS. Holds no personal data. -->
+            <div class="form-honeypot" aria-hidden="true">
+              <label for="_gotcha">Leave this field blank</label>
+              <input type="text" id="_gotcha" name="_gotcha" tabindex="-1" autocomplete="off" />
+            </div>
+
+            <button class="btn btn-primary" type="submit">Send message</button>
+
+            <div class="form-status" id="form-status" role="status" aria-live="polite"></div>
+          </form>
+        </div>
+
+        <aside class="contact-details">
+          <div class="card">
+            <h2>Direct contact</h2>
+            <dl>
+              <dt>Email</dt>
+              <dd><span class="placeholder-flag">placeholder</span> hello@kathlandrethcounselling.example</dd>
+              <dt>Phone</dt>
+              <dd><span class="placeholder-flag">placeholder</span> 000 000 0000</dd>
+              <dt>Location</dt>
+              <dd>Placeholder: in-person / online details to be confirmed.</dd>
+            </dl>
+          </div>
+
+          <div class="card" style="margin-top: 1.5rem;">
+            <h3>What happens next</h3>
+            <p>
+              Placeholder copy: Kath (or a member of her team) typically
+              responds within 1–2 business days. She'll reply by your
+              preferred contact method to arrange a short first
+              conversation — there's no obligation, and this first step
+              doesn't commit you to ongoing sessions.
+            </p>
+          </div>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>&copy; <span id="year">2026</span> Kath Landreth Counselling &amp; Supervision. <span class="placeholder-flag">Placeholder name &amp; details</span></p>
+      <ul class="footer-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About &amp; Services</a></li>
+        <li><a href="contact.html">Contact &amp; Booking</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
