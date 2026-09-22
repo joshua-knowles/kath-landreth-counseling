@@ -402,6 +402,133 @@ p { margin: 0 0 1em; }
   margin-bottom: 0;
 }
 
+/* --- Services carousel ---
+   Base rules (no JS-active class) intentionally match the plain
+   .card-grid layout, so the services list stays fully visible and
+   readable if JavaScript fails to load. js/main.js adds "is-carousel"
+   to #services-carousel once it initialises, which is what switches
+   the track over to absolute-positioned, circular slide layout below. */
+.carousel-track {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.carousel-slide {
+  margin: 0;
+}
+
+.services-carousel {
+  position: relative;
+}
+
+.carousel-viewport {
+  overflow: visible;
+}
+
+.carousel-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 3;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-soft);
+  color: var(--color-text);
+  font-size: 1.5rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.carousel-arrow:hover {
+  background: var(--color-primary);
+  color: #fff;
+}
+
+.carousel-arrow-prev {
+  left: 0;
+}
+
+.carousel-arrow-next {
+  right: 0;
+}
+
+.carousel-dots {
+  display: flex;
+  justify-content: center;
+  gap: 0.6rem;
+  margin-top: 1.75rem;
+}
+
+.carousel-dot {
+  width: 10px;
+  height: 10px;
+  padding: 0;
+  border-radius: 50%;
+  border: 2px solid var(--color-primary);
+  background: transparent;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+}
+
+.carousel-dot:hover {
+  border-color: var(--color-primary-dark);
+}
+
+.carousel-dot.is-active {
+  background: var(--color-primary);
+  transform: scale(1.2);
+}
+
+/* Carousel mode: only applied once JS confirms it initialised */
+.services-carousel.is-carousel .carousel-viewport {
+  overflow: hidden;
+  padding: 0 3.25rem;
+}
+
+.services-carousel.is-carousel .carousel-track {
+  display: block;
+  position: relative;
+  min-height: 200px;
+  transition: height 0.4s ease;
+}
+
+.services-carousel.is-carousel .carousel-slide {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(100%, 480px);
+  transform: translate(-50%, -50%) translateX(var(--slide-offset, 0px)) scale(var(--slide-scale, 1));
+  opacity: var(--slide-opacity, 1);
+  filter: blur(var(--slide-blur, 0px));
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.4s ease, filter 0.4s ease;
+  pointer-events: none;
+}
+
+.services-carousel.is-carousel .carousel-slide.is-active {
+  pointer-events: auto;
+  z-index: 2;
+}
+
+@media (max-width: 560px) {
+  .services-carousel.is-carousel .carousel-viewport {
+    padding: 0 2.75rem;
+  }
+
+  .carousel-arrow {
+    width: 38px;
+    height: 38px;
+    font-size: 1.25rem;
+  }
+}
+
 /* --- Reassurance / trust strip --- */
 .trust-strip {
   display: grid;

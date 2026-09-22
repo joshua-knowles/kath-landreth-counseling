@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", function () {
   initNavToggle();
   initContactForm();
   initFooterYear();
+  initServicesCarousel();
 });
 
 function initFooterYear() {
@@ -105,4 +106,107 @@ function showStatus(el, message, kind) {
   el.classList.remove("is-success", "is-error");
   el.classList.add("is-visible", kind === "success" ? "is-success" : "is-error");
   el.setAttribute("role", "status");
+}
+
+// Services carousel (about.html). Circular: slide position is always the
+// shortest signed distance from the current slide, so "next" from the
+// last slide wraps to the first and vice versa, forever. Without this
+// script the markup falls back to the plain .card-grid layout (see
+// css/style.css), so nothing here is required for the content to be
+// readable.
+function initServicesCarousel() {
+  var root = document.getElementById("services-carousel");
+  var dotsContainer = document.getElementById("services-dots");
+  if (!root || !dotsContainer) return;
+
+  var track = root.querySelector(".carousel-track");
+  var slides = Array.prototype.slice.call(root.querySelectorAll(".carousel-slide"));
+  var prevBtn = root.querySelector(".carousel-arrow-prev");
+  var nextBtn = root.querySelector(".carousel-arrow-next");
+  if (!track || slides.length < 2 || !prevBtn || !nextBtn) return;
+
+  var SLIDE_GAP = 32; // px between slide centres, on top of slide width
+  var current = 0;
+  var step = 0;
+  var dots = [];
+
+  slides.forEach(function (slide, i) {
+    var dot = document.createElement("button");
+    dot.type = "button";
+    dot.className = "carousel-dot";
+    dot.setAttribute("aria-label", "Go to service " + (i + 1) + " of " + slides.length);
+    dot.addEventListener("click", function () {
+      goTo(i);
+    });
+    dotsContainer.appendChild(dot);
+    dots.push(dot);
+  });
+
+  function measure() {
+    var activeSlide = slides[current];
+    step = activeSlide.offsetWidth + SLIDE_GAP;
+    track.style.height = activeSlide.offsetHeight + "px";
+  }
+
+  function render() {
+    var total = slides.length;
+
+    slides.forEach(function (slide, i) {
+      var distance = ((i - current) % total + total) % total;
+      if (distance > total / 2) distance -= total;
+      var magnitude = Math.abs(distance);
+      var isActive = distance === 0;
+
+      slide.style.setProperty("--slide-offset", distance * step + "px");
+      slide.style.setProperty("--slide-scale", isActive ? "1" : "0.88");
+      slide.style.setProperty("--slide-opacity", isActive ? "1" : magnitude === 1 ? "0.35" : "0");
+      slide.style.setProperty("--slide-blur", isActive ? "0px" : "4px");
+      slide.classList.toggle("is-active", isActive);
+      slide.setAttribute("aria-hidden", isActive ? "false" : "true");
+    });
+
+    dots.forEach(function (dot, i) {
+      var isActive = i === current;
+      dot.classList.toggle("is-active", isActive);
+      dot.setAttribute("aria-current", isActive ? "true" : "false");
+    });
+  }
+
+  function goTo(index) {
+    var total = slides.length;
+    current = ((index % total) + total) % total;
+    measure();
+    render();
+  }
+
+  prevBtn.addEventListener("click", function () {
+    goTo(current - 1);
+  });
+
+  nextBtn.addEventListener("click", function () {
+    goTo(current + 1);
+  });
+
+  root.addEventListener("keydown", function (event) {
+    if (event.key === "ArrowLeft") {
+      event.preventDefault();
+      goTo(current - 1);
+    } else if (event.key === "ArrowRight") {
+      event.preventDefault();
+      goTo(current + 1);
+    }
+  });
+
+  window.addEventListener("resize", function () {
+    measure();
+    render();
+  });
+
+  root.classList.add("is-carousel");
+  prevBtn.hidden = false;
+  nextBtn.hidden = false;
+  dotsContainer.hidden = false;
+
+  measure();
+  render();
 }

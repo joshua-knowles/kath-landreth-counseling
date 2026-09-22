@@ -65,29 +65,56 @@
           <h2>Services</h2>
           <p>Placeholder list. Exact scope of services still to be finalised.</p>
         </div>
-        <div class="card-grid">
-          <div class="card card-featured">
-            <h3>Ministry Supervision for Church Leaders</h3>
-            <p>
-              Regular, confidential supervision for pastors, ministry
-              workers, and church leaders. A dedicated space to reflect on
-              the demands of ministry, process difficult situations, and be
-              supported as a whole person, not just in your role.
-              Placeholder copy: format, frequency, and pricing to be
-              confirmed.
-            </p>
+        <!--
+          Services carousel: progressively enhanced by js/main.js
+          (initServicesCarousel). Without JS, .carousel-track falls back to
+          the plain .card-grid layout below (both classes are present on
+          the <ul>), so every service is still listed and readable.
+          Add more <li class="carousel-slide"> entries here as Kath's real
+          service list grows; the carousel JS re-measures slide count and
+          builds arrows/dots automatically, no other changes needed.
+        -->
+        <div class="services-carousel" id="services-carousel">
+          <button type="button" class="carousel-arrow carousel-arrow-prev" aria-label="Previous service" hidden>
+            <span aria-hidden="true">&#8249;</span>
+          </button>
+
+          <div class="carousel-viewport">
+            <ul class="carousel-track card-grid" id="services-track">
+              <li class="carousel-slide">
+                <div class="card card-featured">
+                  <h3>Ministry Supervision for Church Leaders</h3>
+                  <p>
+                    Regular, confidential supervision for pastors, ministry
+                    workers, and church leaders. A dedicated space to reflect on
+                    the demands of ministry, process difficult situations, and be
+                    supported as a whole person, not just in your role.
+                    Placeholder copy: format, frequency, and pricing to be
+                    confirmed.
+                  </p>
+                </div>
+              </li>
+              <li class="carousel-slide">
+                <div class="card">
+                  <h3>General Counselling</h3>
+                  <p>
+                    Placeholder: broader one-to-one counselling support for
+                    individuals navigating a range of personal or relational
+                    concerns. Full scope, session format, and areas of focus
+                    still to be determined and will be listed here once
+                    confirmed.
+                  </p>
+                </div>
+              </li>
+            </ul>
           </div>
-          <div class="card">
-            <h3>General Counselling</h3>
-            <p>
-              Placeholder: broader one-to-one counselling support for
-              individuals navigating a range of personal or relational
-              concerns. Full scope, session format, and areas of focus
-              still to be determined and will be listed here once
-              confirmed.
-            </p>
-          </div>
+
+          <button type="button" class="carousel-arrow carousel-arrow-next" aria-label="Next service" hidden>
+            <span aria-hidden="true">&#8250;</span>
+          </button>
         </div>
+
+        <div class="carousel-dots" id="services-dots" aria-label="Service pages" hidden></div>
       </div>
     </section>
 
