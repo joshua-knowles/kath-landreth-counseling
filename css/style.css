@@ -489,8 +489,14 @@ p { margin: 0 0 1em; }
 
 /* Carousel mode: only applied once JS confirms it initialised */
 .services-carousel.is-carousel .carousel-viewport {
+  /* overflow-x/overflow-y set to different keywords (e.g. hidden + visible)
+     makes browsers resolve "visible" to "auto" per spec, which draws a
+     real scrollbar. Keep overflow uniformly hidden instead, and reserve
+     vertical padding as headroom for the active card's hover-lift
+     (translateY) and its larger hover box-shadow, so neither gets
+     clipped against the top/bottom edge. */
   overflow: hidden;
-  padding: 0 3.25rem;
+  padding: 16px 3.25rem;
 }
 
 .services-carousel.is-carousel .carousel-track {
@@ -519,7 +525,7 @@ p { margin: 0 0 1em; }
 
 @media (max-width: 560px) {
   .services-carousel.is-carousel .carousel-viewport {
-    padding: 0 2.75rem;
+    padding: 16px 2.75rem;
   }
 
   .carousel-arrow {
