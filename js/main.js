@@ -6,6 +6,7 @@ document.addEventListener("DOMContentLoaded", function () {
   initContactForm();
   initFooterYear();
   initServicesCarousel();
+  initHoverOutlineTiming();
 });
 
 function initFooterYear() {
@@ -217,4 +218,39 @@ function initServicesCarousel() {
 
   measure();
   render();
+}
+
+// Sizes the hover-outline sweep (see css/style.css's "Animated hover
+// outline" block) so it travels at a constant visual speed instead of a
+// fixed duration. A fixed duration looks right on a small card but
+// rushed on a much wider container like the note box, since the ring
+// has a longer perimeter to cover in the same time. Setting
+// --outline-duration per element, proportional to its own perimeter,
+// keeps the sweep reading at the same pace everywhere.
+function initHoverOutlineTiming() {
+  var elements = document.querySelectorAll(".card, .note-box, .hero-image-slot, .portrait-slot");
+  if (!elements.length) return;
+
+  // Calibrated so a typical small card (~350x210px, perimeter ~1120px)
+  // lands close to the 0.5s duration that already looked right there.
+  var PX_PER_SECOND = 2200;
+  var MIN_DURATION = 0.35;
+  var MAX_DURATION = 1.4;
+
+  function apply() {
+    elements.forEach(function (el) {
+      var perimeter = 2 * (el.offsetWidth + el.offsetHeight);
+      var duration = perimeter / PX_PER_SECOND;
+      duration = Math.max(MIN_DURATION, Math.min(MAX_DURATION, duration));
+      el.style.setProperty("--outline-duration", duration.toFixed(2) + "s");
+    });
+  }
+
+  apply();
+
+  var resizeTimer;
+  window.addEventListener("resize", function () {
+    window.clearTimeout(resizeTimer);
+    resizeTimer = window.setTimeout(apply, 150);
+  });
 }

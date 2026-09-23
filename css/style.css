@@ -383,14 +383,20 @@ p { margin: 0 0 1em; }
 
 /* --- Animated hover outline ---
    Draws a green ring that sweeps around the container's edge on hover,
-   starting and finishing at the top (12 o'clock). Runs a little longer
-   than the 0.15s hover-lift, with an eased S-curve (slow to start,
-   fast through the middle, slow to finish) so the sweep itself reads
-   clearly instead of flashing on. Implemented as a conic-gradient on a
-   pseudo-element, masked down to a ring shape; @property is what makes
-   the custom property (and therefore the gradient's sweep) animatable
-   instead of snapping instantly. Shared by every "lift" container:
-   cards, the note box, and the hero image slot. */
+   starting and finishing at the top (12 o'clock), with an eased S-curve
+   (slow to start, fast through the middle, slow to finish). Implemented
+   as a conic-gradient on a pseudo-element, masked down to a ring shape;
+   @property is what makes the custom property (and therefore the
+   gradient's sweep) animatable instead of snapping instantly. Shared by
+   every "lift" container: cards, the note box, the hero image slot, and
+   the about-page portrait slot.
+
+   Duration is set per-element via --outline-duration (see
+   initHoverOutlineTiming in js/main.js), which measures each element's
+   own perimeter so the ring sweeps at a constant visual speed rather
+   than a fixed time — otherwise the same 0.5s that suits a small card
+   makes the sweep look rushed on a much wider container like the note
+   box. The 0.5s fallback only applies if JS hasn't run yet. */
 @property --outline-pct {
   syntax: "<percentage>";
   inherits: false;
@@ -399,13 +405,15 @@ p { margin: 0 0 1em; }
 
 .card,
 .note-box,
-.hero-image-slot {
+.hero-image-slot,
+.portrait-slot {
   position: relative;
 }
 
 .card::after,
 .note-box::after,
-.hero-image-slot::after {
+.hero-image-slot::after,
+.portrait-slot::after {
   content: "";
   position: absolute;
   inset: 0;
@@ -417,10 +425,11 @@ p { margin: 0 0 1em; }
   mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   mask-composite: exclude;
   pointer-events: none;
-  transition: --outline-pct 0.5s cubic-bezier(0.65, 0, 0.35, 1);
+  transition: --outline-pct var(--outline-duration, 0.5s) cubic-bezier(0.65, 0, 0.35, 1);
 }
 
 .card:hover::after,
+.portrait-slot:hover::after,
 .note-box:hover::after,
 .hero-image-slot:hover::after {
   --outline-pct: 100%;
@@ -665,6 +674,12 @@ p { margin: 0 0 1em; }
   font-size: 0.9rem;
   text-align: center;
   padding: 1.5rem;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.portrait-slot:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 28px rgba(59, 53, 46, 0.14);
 }
 
 /* --- Confidentiality note box --- */
