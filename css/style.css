@@ -383,8 +383,10 @@ p { margin: 0 0 1em; }
 
 /* --- Animated hover outline ---
    Draws a green ring that sweeps around the container's edge on hover,
-   starting and finishing at the top (12 o'clock), over the same 0.15s
-   duration as the hover-lift. Implemented as a conic-gradient on a
+   starting and finishing at the top (12 o'clock). Runs a little longer
+   than the 0.15s hover-lift, with an eased S-curve (slow to start,
+   fast through the middle, slow to finish) so the sweep itself reads
+   clearly instead of flashing on. Implemented as a conic-gradient on a
    pseudo-element, masked down to a ring shape; @property is what makes
    the custom property (and therefore the gradient's sweep) animatable
    instead of snapping instantly. Shared by every "lift" container:
@@ -415,7 +417,7 @@ p { margin: 0 0 1em; }
   mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   mask-composite: exclude;
   pointer-events: none;
-  transition: --outline-pct 0.15s ease;
+  transition: --outline-pct 0.5s cubic-bezier(0.65, 0, 0.35, 1);
 }
 
 .card:hover::after,
