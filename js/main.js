@@ -233,9 +233,14 @@ function initHoverOutlineTiming() {
 
   // Calibrated so a typical small card (~350x210px, perimeter ~1120px)
   // lands close to the 0.5s duration that already looked right there.
+  // MAX_DURATION caps how far wide containers (e.g. the note box) can
+  // stretch — a straight perimeter/speed calculation reached ~1.15s
+  // there, which read as too slow; capping it splits the difference
+  // between that and the original flat 0.5s. Small containers are well
+  // under this cap already, so they're unaffected.
   var PX_PER_SECOND = 2200;
   var MIN_DURATION = 0.35;
-  var MAX_DURATION = 1.4;
+  var MAX_DURATION = 0.8;
 
   function apply() {
     elements.forEach(function (el) {

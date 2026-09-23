@@ -81,6 +81,24 @@ h3 { font-size: clamp(1.15rem, 2.5vw, 1.4rem); }
 
 p { margin: 0 0 1em; }
 
+main ul, main ol {
+  margin: 0 0 1em;
+  padding-left: 1.4em;
+  color: var(--color-text);
+}
+
+main li + li {
+  margin-top: 0.3em;
+}
+
+code {
+  font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+  background: var(--color-bg-alt);
+  padding: 0.15em 0.4em;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
 .container {
   width: 100%;
   max-width: var(--max-width);

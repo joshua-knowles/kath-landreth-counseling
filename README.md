@@ -127,6 +127,11 @@ Notably:
   dashed placeholder boxes, not real `<img>` tags yet.
 - **Domain name** — not yet chosen; nothing in the code assumes a
   specific domain.
+- **Privacy policy** (`privacy.html`) — a generic starting draft only,
+  not reviewed by Kath or a legal professional. It also needs the
+  chosen form-to-email provider's name/policy link added once that's
+  confirmed (see the "Data handling & email forwarding" section
+  above). Linked from every page's footer, not the main nav.
 
 ## Deploying
 
