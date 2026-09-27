@@ -150,7 +150,6 @@ function setupCarousel(config) {
   var current = 0;
   var step = 0;
   var enabled = false;
-  var hintPlayed = false;
   var hintTimers = [];
   var dots = [];
 
@@ -213,40 +212,37 @@ function setupCarousel(config) {
     render();
   }
 
-  // Mobile-only swipe hint (see css/style.css): nudges the active slide
-  // and shows a brief "Swipe" label the first time this carousel
-  // becomes enabled, then settles the arrows into a faded overlay.
-  // Everything here is invisible outside the mobile breakpoint
-  // regardless of when it fires, since that's handled in CSS — this
-  // only needs to worry about the sequencing and timing.
-  function playHint() {
+  // Mobile-only swipe hint (see css/style.css): once this carousel
+  // scrolls into view (not on page load — by then a visitor may be
+  // long past it), the "Swipe" label appears and stays up, and the
+  // active slide keeps nudging left/right on a loop, pausing briefly
+  // between each pass. It all keeps going until the visitor actually
+  // interacts (see cancelHint(), called from goTo() on every
+  // click/dot/swipe), at which point the arrows settle into a faded
+  // overlay. Everything here is invisible outside the mobile
+  // breakpoint regardless of when it fires, since that's handled in
+  // CSS — this only needs to worry about the sequencing and timing.
+  function startHintLoop() {
+    if (hint) hint.classList.add("is-visible");
+    nudgeOnce();
+  }
+
+  function nudgeOnce() {
     var activeSlide = slides[current];
     activeSlide.classList.add("show-swipe-nudge");
-    if (hint) hint.classList.add("is-visible");
-
     hintTimers.push(
       window.setTimeout(function () {
         activeSlide.classList.remove("show-swipe-nudge");
-      }, 1200)
-    );
-    hintTimers.push(
-      window.setTimeout(function () {
-        if (hint) hint.classList.remove("is-visible");
-      }, 2200)
-    );
-    hintTimers.push(
-      window.setTimeout(function () {
-        prevBtn.classList.add("is-faded");
-        nextBtn.classList.add("is-faded");
-      }, 2600)
+        hintTimers.push(window.setTimeout(nudgeOnce, 1400));
+      }, 1100)
     );
   }
 
-  // Called on any user-initiated navigation: skip straight to the
-  // faded, "you've got it" end state instead of letting a pending hint
-  // play out from under an already-engaged visitor.
+  // Called on any user-initiated navigation: stop the loop and skip
+  // straight to the faded, "you've got it" end state instead of
+  // letting it keep running under an already-engaged visitor.
   function cancelHint() {
-    if (!hintTimers.length) return;
+    if (!hintTimers.length && !hint) return;
     hintTimers.forEach(function (id) {
       window.clearTimeout(id);
     });
@@ -269,10 +265,6 @@ function setupCarousel(config) {
     prevBtn.hidden = false;
     nextBtn.hidden = false;
     dotsContainer.hidden = false;
-    if (config.swipe && !hintPlayed) {
-      hintPlayed = true;
-      playHint();
-    }
   }
 
   function disable() {
@@ -370,6 +362,27 @@ function setupCarousel(config) {
       },
       { passive: true }
     );
+
+    // Start the hint loop once the carousel actually scrolls into
+    // view, not on page load — a visitor may not reach it (e.g. Home's
+    // offerings carousel is well below the fold) until well after a
+    // fixed page-load timer would have already finished playing it.
+    if ("IntersectionObserver" in window) {
+      var hintStarted = false;
+      var hintObserver = new IntersectionObserver(
+        function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting && enabled && !hintStarted) {
+              hintStarted = true;
+              startHintLoop();
+              hintObserver.disconnect();
+            }
+          });
+        },
+        { threshold: 0.5 }
+      );
+      hintObserver.observe(root);
+    }
   }
 
   refresh();
@@ -390,6 +403,7 @@ function initOfferingsCarousel() {
     dotsId: "offerings-dots",
     itemLabel: "offering",
     mobileBreakpoint: 640,
+    swipe: true,
   });
 }
 

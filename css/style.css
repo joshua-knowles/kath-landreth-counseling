@@ -188,6 +188,16 @@ code {
     padding: 0.75em 0.6em;
     font-size: 0.88rem;
     text-align: center;
+    line-height: 1.25;
+    /* When one label wraps to two lines it stretches the row (and
+       therefore the other button) taller; inline-block content just
+       sits at the top of that extra height by default, so a
+       single-line label like "Read about Kath" looked pinned to the
+       top instead of centred. Flex + centering fixes that regardless
+       of how many lines either label ends up wrapping to. */
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 }
 
@@ -330,12 +340,13 @@ code {
 @media (max-width: 640px) {
   /* Sticky header already anchors the top of the page; a full 4rem of
      extra padding above the eyebrow pill just pushes content down.
-     Bottom padding is reduced too — most noticeable on Contact &
-     Booking, whose hero has no buttons to fill that trailing space,
-     so the full 3.5rem reads as a big gap before the form. */
+     Bottom padding is reduced further still — most noticeable on
+     Contact & Booking, whose hero has no buttons to fill that
+     trailing space, so even a modest bottom padding reads as a big
+     gap before the form. */
   .hero {
     padding-top: 1.5rem;
-    padding-bottom: 1.75rem;
+    padding-bottom: 0.5rem;
   }
 }
 
@@ -413,6 +424,15 @@ code {
      column anyway. */
   .section {
     padding: 2.25rem 0;
+  }
+
+  /* The section right after a hero gets an even smaller top padding:
+     combined with the hero's own reduced bottom padding, this closes
+     the gap noticeable on Contact & Booking between the intro text and
+     the form (Home's hero has buttons filling that space, so it's less
+     visible there, but the tighter spacing suits it too). */
+  .hero + .section {
+    padding-top: 1rem;
   }
 }
 
@@ -736,35 +756,41 @@ code {
   }
 }
 
-/* --- Swipe hint (mobile only, Services carousel — see config.swipe in
-   js/main.js's initServicesCarousel). On enable, JS briefly nudges the
-   active slide left/right and shows a "Swipe" label to hint that the
-   carousel is touch-swipeable, then settles the arrows from a solid
-   button down to a faint overlay, since swipe is the primary way to
-   browse here. All of this is invisible outside this breakpoint,
-   regardless of when JS fires it, so the always-on Services carousel
-   still behaves exactly as before at desktop widths. */
+/* --- Swipe hint (mobile only, both carousels — see config.swipe in
+   js/main.js). Once the carousel scrolls into view, JS keeps the
+   active slide nudging left/right on a loop (a pause between each
+   pass) and keeps a "Swipe" label up over the centre of the card,
+   until the visitor actually interacts, at which point the arrows
+   settle from a solid button down to a faint overlay, since swipe is
+   the primary way to browse here. All of this is invisible outside
+   this breakpoint regardless of when JS fires it, so the always-on
+   Services carousel still behaves exactly as before at desktop
+   widths. */
 .carousel-hint {
   display: none;
 }
 
 @media (max-width: 640px) {
   .carousel-hint {
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     position: absolute;
-    left: 50%;
-    bottom: 14px;
-    transform: translateX(-50%);
-    background: rgba(59, 53, 46, 0.78);
+    inset: 0;
+    margin: auto;
+    width: fit-content;
+    height: fit-content;
+    background: rgba(59, 53, 46, 0.55);
     color: #fff;
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 0.03em;
-    padding: 0.35em 1em;
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 0.6em 1.4em;
     border-radius: 999px;
     opacity: 0;
     pointer-events: none;
-    z-index: 4;
+    z-index: 5;
     transition: opacity 0.5s ease;
   }
 
@@ -889,6 +915,13 @@ code {
 
   .bio-content {
     order: 1;
+  }
+
+  /* Shortens the bio so the (still-placeholder) portrait below appears
+     sooner in the scroll; the secondary paragraph is supplementary
+     detail, not the core intro. */
+  .bio-secondary {
+    display: none;
   }
 }
 
@@ -1045,6 +1078,28 @@ code {
   font-size: 0.92rem;
   color: var(--color-text-muted);
   margin-bottom: 1.5rem;
+}
+
+.privacy-note-short {
+  display: none;
+}
+
+@media (max-width: 640px) {
+  /* Fine-print version: shorter copy, small type, moved below the
+     submit button instead of taking up prominent space above the
+     form's first field. */
+  .privacy-note-full {
+    display: none;
+  }
+
+  .privacy-note-short {
+    display: block;
+    background: none;
+    padding: 0;
+    margin: 0.75rem 0 0;
+    font-size: 0.72rem;
+    line-height: 1.4;
+  }
 }
 
 .form-status {

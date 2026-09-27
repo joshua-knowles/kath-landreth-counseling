@@ -79,7 +79,15 @@
             method="POST"
             novalidate
           >
-            <div class="privacy-note">
+            <!--
+              Two versions: .privacy-note-full sits here at the top on
+              desktop; .privacy-note-short is a fine-print version
+              placed below the submit button, shown on mobile only (see
+              css/style.css). Same reasoning as the About page's
+              confidentiality-full/short split — content can't cleanly
+              differ by breakpoint without two versions in the markup.
+            -->
+            <div class="privacy-note privacy-note-full">
               This form is used only to arrange a first conversation.
               Nothing you enter is stored on this site or anywhere else.
               It's sent directly and only to Kath, by email. Placeholder
@@ -135,6 +143,12 @@
             </div>
 
             <button class="btn btn-primary" type="submit">Send message</button>
+
+            <p class="privacy-note privacy-note-short">
+              Used only to arrange a first conversation. Nothing is
+              stored; it's sent directly to Kath. Wording to be
+              reviewed before publishing.
+            </p>
 
             <div class="form-status" id="form-status" role="status" aria-live="polite"></div>
           </form>
