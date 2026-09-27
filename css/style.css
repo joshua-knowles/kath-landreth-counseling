@@ -190,7 +190,7 @@ code {
   gap: 0.9rem;
 }
 
-@media (max-width: 560px) {
+@media (max-width: 840px) {
   /* Keep button pairs side by side on phones instead of stacking:
      shrink padding/font just enough that two buttons fit one row. */
   .btn-group {
@@ -353,7 +353,7 @@ code {
   background: linear-gradient(180deg, var(--color-bg-alt) 0%, var(--color-bg) 100%);
 }
 
-@media (max-width: 640px) {
+@media (max-width: 840px) {
   /* Sticky header already anchors the top of the page; a full 4rem of
      extra padding above the eyebrow pill just pushes content down.
      Bottom padding is reduced further still — most noticeable on
@@ -417,7 +417,7 @@ code {
   box-shadow: 0 10px 28px rgba(59, 53, 46, 0.14);
 }
 
-@media (max-width: 640px) {
+@media (max-width: 840px) {
   /* This is still just placeholder text in a box, so on phones it
      shrinks to a short banner strip instead of a near-square block
      that eats most of the first screen. Widen this back out (or
@@ -434,7 +434,7 @@ code {
   padding: 3.5rem 0;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 840px) {
   /* Full desktop padding between every stacked section adds up to a
      lot of dead scrolling on phones, where sections stack in a single
      column anyway. */
@@ -572,7 +572,7 @@ code {
   margin-bottom: 0;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 840px) {
   /* Used on the Home page's "What Kath offers" cards, which become a
      carousel on mobile (see initOfferingsCarousel in js/main.js).
      Full desktop type size made each card's own carousel slide (and
@@ -775,7 +775,7 @@ code {
   z-index: 2;
 }
 
-@media (max-width: 560px) {
+@media (max-width: 840px) {
   .carousel.is-carousel .carousel-viewport {
     padding: 16px 2.75rem;
     -webkit-mask-image: linear-gradient(
@@ -815,7 +815,7 @@ code {
   display: none;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 840px) {
   .carousel-hint {
     display: flex;
     align-items: center;
@@ -904,7 +904,7 @@ code {
   margin-bottom: 0;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 840px) {
   .trust-strip {
     gap: 0.5rem;
   }
@@ -947,7 +947,7 @@ code {
   box-shadow: 0 10px 28px rgba(59, 53, 46, 0.14);
 }
 
-@media (max-width: 640px) {
+@media (max-width: 840px) {
   /* Mobile only: read the bio before the (still-placeholder) portrait,
      and shrink that portrait to the same short banner treatment as the
      Home page's hero image, instead of a near-full-screen block. */
@@ -1000,7 +1000,7 @@ code {
   display: none;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 840px) {
   .confidentiality-full {
     display: none;
   }
@@ -1129,7 +1129,7 @@ code {
   display: none;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 840px) {
   /* Fine-print version: shorter copy, small type, moved below the
      submit button instead of taking up prominent space above the
      form's first field. */

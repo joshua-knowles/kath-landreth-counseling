@@ -478,7 +478,7 @@ function initOfferingsCarousel() {
     rootId: "offerings-carousel",
     dotsId: "offerings-dots",
     itemLabel: "offering",
-    mobileBreakpoint: 640,
+    mobileBreakpoint: 840,
     swipe: true,
   });
 }
