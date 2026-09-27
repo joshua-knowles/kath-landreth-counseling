@@ -35,7 +35,7 @@
           <div class="portrait-slot">
             <span>[ Placeholder portrait: warm, approachable photo of Kath. Alt text: "Portrait of Kath Landreth" once supplied. ]</span>
           </div>
-          <div>
+          <div class="bio-content">
             <span class="hero-eyebrow">About Kath</span>
             <h1>Hello, I'm Kath.</h1>
             <p>
@@ -81,7 +81,7 @@
           <div class="carousel-viewport">
             <ul class="carousel-track card-grid" id="services-track">
               <li class="carousel-slide">
-                <div class="card">
+                <div class="card card-compact">
                   <h3>Ministry Supervision for Church Leaders</h3>
                   <p>
                     Regular, confidential supervision for pastors, ministry
@@ -94,7 +94,7 @@
                 </div>
               </li>
               <li class="carousel-slide">
-                <div class="card">
+                <div class="card card-compact">
                   <h3>General Counselling</h3>
                   <p>
                     Placeholder: broader one-to-one counselling support for
@@ -109,7 +109,7 @@
                    carousel with more than two cards. Replace with Kath's
                    real, comprehensive service list once confirmed. -->
               <li class="carousel-slide">
-                <div class="card">
+                <div class="card card-compact">
                   <h3>Grief &amp; Loss Support</h3>
                   <p>
                     Placeholder: a space to process loss and the different
@@ -119,7 +119,7 @@
                 </div>
               </li>
               <li class="carousel-slide">
-                <div class="card">
+                <div class="card card-compact">
                   <h3>Anxiety &amp; Stress</h3>
                   <p>
                     Placeholder: support for managing anxiety, overwhelm,
@@ -129,7 +129,7 @@
                 </div>
               </li>
               <li class="carousel-slide">
-                <div class="card">
+                <div class="card card-compact">
                   <h3>Life Transitions</h3>
                   <p>
                     Placeholder: support through significant change, such
@@ -139,6 +139,10 @@
                 </div>
               </li>
             </ul>
+            <!-- Mobile-only swipe hint (see setupCarousel in js/main.js
+                 and css/style.css); invisible on desktop and until JS
+                 briefly shows it once, on first load. -->
+            <span class="carousel-hint" aria-hidden="true">Swipe</span>
           </div>
 
           <button type="button" class="carousel-arrow carousel-arrow-next" aria-label="Next service" hidden>
@@ -155,7 +159,14 @@
       <div class="container">
         <div class="note-box">
           <h3>Confidentiality &amp; ethics</h3>
-          <p>
+          <!--
+            Two versions of this copy: .confidentiality-full (desktop)
+            and .confidentiality-short (mobile only, shortened, with a
+            link through to the full Privacy Policy). CSS toggles which
+            one is visible per breakpoint (see css/style.css) — content
+            can't cleanly differ by breakpoint any other way without JS.
+          -->
+          <p class="confidentiality-full">
             Placeholder copy, to be reviewed against Kath's actual
             professional/ethical body once confirmed. What you share in
             sessions is treated as confidential and is not discussed
@@ -164,6 +175,11 @@
             law (for example, where there is a serious risk of harm).
             Any limits to confidentiality will always be explained
             clearly before you begin.
+          </p>
+          <p class="confidentiality-short">
+            Placeholder: what you share is treated as confidential,
+            within the usual professional and legal limits.
+            <a href="privacy.html">Read the full privacy policy</a>.
           </p>
         </div>
       </div>

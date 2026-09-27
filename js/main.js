@@ -128,6 +128,8 @@ function setupCarousel(config) {
   if (!root || !dotsContainer) return;
 
   var track = root.querySelector(".carousel-track");
+  var viewport = root.querySelector(".carousel-viewport");
+  var hint = root.querySelector(".carousel-hint");
   var slides = Array.prototype.slice.call(root.querySelectorAll(".carousel-slide"));
   var prevBtn = root.querySelector(".carousel-arrow-prev");
   var nextBtn = root.querySelector(".carousel-arrow-next");
@@ -138,6 +140,8 @@ function setupCarousel(config) {
   var current = 0;
   var step = 0;
   var enabled = false;
+  var hintPlayed = false;
+  var hintTimers = [];
   var dots = [];
 
   slides.forEach(function (slide, i) {
@@ -193,9 +197,56 @@ function setupCarousel(config) {
   function goTo(index) {
     var total = slides.length;
     current = ((index % total) + total) % total;
+    cancelHint();
     if (!enabled) return;
     measure();
     render();
+  }
+
+  // Mobile-only swipe hint (see css/style.css): nudges the active slide
+  // and shows a brief "Swipe" label the first time this carousel
+  // becomes enabled, then settles the arrows into a faded overlay.
+  // Everything here is invisible outside the mobile breakpoint
+  // regardless of when it fires, since that's handled in CSS — this
+  // only needs to worry about the sequencing and timing.
+  function playHint() {
+    var activeSlide = slides[current];
+    activeSlide.classList.add("show-swipe-nudge");
+    if (hint) hint.classList.add("is-visible");
+
+    hintTimers.push(
+      window.setTimeout(function () {
+        activeSlide.classList.remove("show-swipe-nudge");
+      }, 1200)
+    );
+    hintTimers.push(
+      window.setTimeout(function () {
+        if (hint) hint.classList.remove("is-visible");
+      }, 2200)
+    );
+    hintTimers.push(
+      window.setTimeout(function () {
+        prevBtn.classList.add("is-faded");
+        nextBtn.classList.add("is-faded");
+      }, 2600)
+    );
+  }
+
+  // Called on any user-initiated navigation: skip straight to the
+  // faded, "you've got it" end state instead of letting a pending hint
+  // play out from under an already-engaged visitor.
+  function cancelHint() {
+    if (!hintTimers.length) return;
+    hintTimers.forEach(function (id) {
+      window.clearTimeout(id);
+    });
+    hintTimers = [];
+    slides.forEach(function (slide) {
+      slide.classList.remove("show-swipe-nudge");
+    });
+    if (hint) hint.classList.remove("is-visible");
+    prevBtn.classList.add("is-faded");
+    nextBtn.classList.add("is-faded");
   }
 
   // enable()/disable() flip the carousel on and off; used directly by
@@ -208,6 +259,10 @@ function setupCarousel(config) {
     prevBtn.hidden = false;
     nextBtn.hidden = false;
     dotsContainer.hidden = false;
+    if (config.swipe && !hintPlayed) {
+      hintPlayed = true;
+      playHint();
+    }
   }
 
   function disable() {
@@ -268,6 +323,45 @@ function setupCarousel(config) {
     resizeTimer = window.setTimeout(refresh, 150);
   });
 
+  // Touch swipe support (config.swipe). Only meaningful on touch
+  // devices — a mouse simply never fires touch events — so this
+  // doesn't need its own viewport-width check on top of that.
+  if (config.swipe && viewport) {
+    var touchStartX = 0;
+    var touchStartY = 0;
+    var tracking = false;
+    var SWIPE_THRESHOLD = 40; // px
+
+    viewport.addEventListener(
+      "touchstart",
+      function (event) {
+        if (!enabled || event.touches.length !== 1) return;
+        tracking = true;
+        touchStartX = event.touches[0].clientX;
+        touchStartY = event.touches[0].clientY;
+      },
+      { passive: true }
+    );
+
+    viewport.addEventListener(
+      "touchend",
+      function (event) {
+        if (!tracking) return;
+        tracking = false;
+        var touch = event.changedTouches[0];
+        var deltaX = touch.clientX - touchStartX;
+        var deltaY = touch.clientY - touchStartY;
+        // Ignore drags that are mostly vertical (page scroll) or too
+        // short to be a deliberate swipe.
+        if (Math.abs(deltaX) < SWIPE_THRESHOLD || Math.abs(deltaX) < Math.abs(deltaY)) {
+          return;
+        }
+        goTo(deltaX < 0 ? current + 1 : current - 1);
+      },
+      { passive: true }
+    );
+  }
+
   refresh();
 }
 
@@ -276,6 +370,7 @@ function initServicesCarousel() {
     rootId: "services-carousel",
     dotsId: "services-dots",
     itemLabel: "service",
+    swipe: true,
   });
 }
 
