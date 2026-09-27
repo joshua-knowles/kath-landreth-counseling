@@ -79,21 +79,6 @@
             method="POST"
             novalidate
           >
-            <!--
-              Two versions: .privacy-note-full sits here at the top on
-              desktop; .privacy-note-short is a fine-print version
-              placed below the submit button, shown on mobile only (see
-              css/style.css). Same reasoning as the About page's
-              confidentiality-full/short split — content can't cleanly
-              differ by breakpoint without two versions in the markup.
-            -->
-            <div class="privacy-note privacy-note-full">
-              This form is used only to arrange a first conversation.
-              Nothing you enter is stored on this site or anywhere else.
-              It's sent directly and only to Kath, by email. Placeholder
-              wording: to be reviewed by Kath / legal before publishing.
-            </div>
-
             <div class="form-row">
               <label for="name">Your name</label>
               <input type="text" id="name" name="name" autocomplete="name" required />
@@ -143,6 +128,21 @@
             </div>
 
             <button class="btn btn-primary" type="submit">Send message</button>
+
+            <!--
+              Two versions, both placed below the submit button now on
+              both breakpoints: .privacy-note-full (desktop, the
+              original full-length wording) and .privacy-note-short (a
+              fine-print version, mobile only). CSS toggles which one
+              is visible per breakpoint — content can't cleanly differ
+              by breakpoint without two versions in the markup.
+            -->
+            <div class="privacy-note privacy-note-full">
+              This form is used only to arrange a first conversation.
+              Nothing you enter is stored on this site or anywhere else.
+              It's sent directly and only to Kath, by email. Placeholder
+              wording: to be reviewed by Kath / legal before publishing.
+            </div>
 
             <p class="privacy-note privacy-note-short">
               Used only to arrange a first conversation. Nothing is

@@ -147,7 +147,27 @@ function setupCarousel(config) {
 
   var itemLabel = config.itemLabel || "item";
   var SLIDE_GAP = 32; // px between slide centres, on top of slide width
+
+  // Deep-linking: if the URL hash matches one of this carousel's
+  // slides by id (e.g. Home's "What Kath offers" cards link to
+  // about.html#service-general-counselling), open on that slide
+  // instead of the first one. The browser's own anchor-jump fires
+  // before this script switches the track over to its absolute-
+  // positioned carousel layout, so it scrolls to the wrong place —
+  // matchedHash below triggers our own corrective scroll once the
+  // carousel has actually finished laying itself out.
   var current = 0;
+  var matchedHash = false;
+  if (window.location.hash) {
+    var hashIndex = slides.findIndex(function (slide) {
+      return "#" + slide.id === window.location.hash;
+    });
+    if (hashIndex !== -1) {
+      current = hashIndex;
+      matchedHash = true;
+    }
+  }
+
   var step = 0;
   var enabled = false;
   var hintTimers = [];
@@ -354,8 +374,13 @@ function setupCarousel(config) {
       dragPointerId = event.pointerId;
       dragStartX = event.clientX;
       dragStartY = event.clientY;
-      root.classList.add("is-dragging");
-      viewport.setPointerCapture(event.pointerId);
+      // Deliberately NOT calling setPointerCapture() here: capturing
+      // immediately, before it's clear this is actually a drag, made
+      // Chromium stop synthesizing the click event on a plain tap —
+      // which broke navigation on cards that are links (e.g. Home's
+      // "What Kath offers"). Capture is instead acquired in
+      // pointermove, once a horizontal drag is confirmed, by which
+      // point a click was never going to fire anyway.
     });
 
     viewport.addEventListener("pointermove", function (event) {
@@ -371,9 +396,12 @@ function setupCarousel(config) {
         if (dragAxis === "y") {
           // This is a vertical page-scroll gesture, not a carousel drag.
           dragging = false;
-          root.classList.remove("is-dragging");
           return;
         }
+        // Just committed to a horizontal drag: only now capture the
+        // pointer (see the comment in pointerdown for why not sooner).
+        root.classList.add("is-dragging");
+        viewport.setPointerCapture(event.pointerId);
       }
       if (dragAxis !== "x") return;
 
@@ -425,6 +453,15 @@ function setupCarousel(config) {
   }
 
   refresh();
+
+  if (matchedHash) {
+    // Wait a frame so the browser's own (premature) anchor-jump has
+    // already happened and our layout above has fully applied, then
+    // override it with a correct scroll to the now-centred slide.
+    window.requestAnimationFrame(function () {
+      root.scrollIntoView({ block: "center" });
+    });
+  }
 }
 
 function initServicesCarousel() {
