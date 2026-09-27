@@ -329,9 +329,13 @@ code {
 
 @media (max-width: 640px) {
   /* Sticky header already anchors the top of the page; a full 4rem of
-     extra padding above the eyebrow pill just pushes content down. */
+     extra padding above the eyebrow pill just pushes content down.
+     Bottom padding is reduced too — most noticeable on Contact &
+     Booking, whose hero has no buttons to fill that trailing space,
+     so the full 3.5rem reads as a big gap before the form. */
   .hero {
     padding-top: 1.5rem;
+    padding-bottom: 1.75rem;
   }
 }
 
@@ -934,6 +938,15 @@ code {
   gap: 2.5rem;
 }
 
+.contact-layout > * {
+  /* Grid items default to min-width: auto, which lets a long unbroken
+     token (an email address, a URL) force its column wider than the
+     container's own padding-box instead of wrapping — the form and
+     "What happens next" card were overflowing past the right padding
+     because of exactly this. Overriding it lets them shrink properly. */
+  min-width: 0;
+}
+
 @media (min-width: 900px) {
   .contact-layout {
     grid-template-columns: 1fr 0.8fr;
@@ -957,6 +970,26 @@ code {
   font-weight: 600;
   margin-bottom: 0.4em;
   font-size: 0.95rem;
+}
+
+.form-row-checkbox {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+}
+
+.form-row-checkbox input[type="checkbox"] {
+  width: 1.1em;
+  height: 1.1em;
+  margin-top: 0.2em;
+  flex-shrink: 0;
+  accent-color: var(--color-primary);
+}
+
+.form-row-checkbox label {
+  font-weight: 400;
+  font-size: 0.92rem;
+  color: var(--color-text-muted);
 }
 
 .form-row .hint {
@@ -1012,24 +1045,6 @@ code {
   font-size: 0.92rem;
   color: var(--color-text-muted);
   margin-bottom: 1.5rem;
-}
-
-.contact-details dl {
-  margin: 0;
-}
-
-.contact-details dt {
-  font-weight: 700;
-  margin-top: 1.1rem;
-}
-
-.contact-details dt:first-child {
-  margin-top: 0;
-}
-
-.contact-details dd {
-  margin: 0.2em 0 0;
-  color: var(--color-text-muted);
 }
 
 .form-status {

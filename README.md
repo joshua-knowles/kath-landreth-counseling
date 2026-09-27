@@ -120,9 +120,17 @@ Notably:
   Counselling" placeholder are listed; the latter needs real detail.
 - **Confidentiality/ethics wording** (`about.html`) — currently generic;
   should be reviewed against Kath's actual professional/ethics body.
-- **Contact details** (`contact.html`) — placeholder email/phone.
+- **Direct contact details** — the email/phone "Direct contact" card
+  was removed from `contact.html` at Kath's request, so the enquiry
+  form is currently the only way to reach her on the site. Add a
+  contact details block back (with real values) if/when direct
+  email/phone contact should be shown too.
 - **Response-time statement** (`contact.html`) — currently "1–2
   business days" as a placeholder.
+- **Terms & conditions** — the enquiry form's consent checkbox
+  currently only links to the Privacy Policy; add a link to actual
+  terms & conditions once Kath has some, per the comment next to that
+  checkbox in `contact.html`.
 - **Images** — see `assets/README.md`; hero and portrait slots are
   dashed placeholder boxes, not real `<img>` tags yet.
 - **Domain name** — not yet chosen; nothing in the code assumes a

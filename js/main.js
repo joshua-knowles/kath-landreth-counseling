@@ -53,6 +53,16 @@ function initContactForm() {
       return;
     }
 
+    // The form has `novalidate` (so the browser never blocks/reports
+    // this on its own — see the note by the <form> tag), which means
+    // every `required` field, including the consent checkbox, needs
+    // this explicit check or it's purely decorative. reportValidity()
+    // still shows the browser's normal native validation bubble.
+    if (!form.reportValidity()) {
+      event.preventDefault();
+      return;
+    }
+
     // If the endpoint hasn't been configured yet, don't let the form
     // silently fail against a placeholder URL — tell the developer/tester.
     if (form.action.indexOf("YOUR_FORM_ID") !== -1) {
