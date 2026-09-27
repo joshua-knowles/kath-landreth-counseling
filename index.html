@@ -17,9 +17,8 @@
         Kath Landreth
         <span class="brand-sub">Counselling &amp; Supervision <span class="placeholder-flag">name TBD</span></span>
       </a>
-      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-nav-links">
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-nav-links" aria-label="Menu">
         <span class="icon-bar"></span>
-        <span>Menu</span>
       </button>
       <ul class="nav-links" id="primary-nav-links">
         <li><a href="index.html" aria-current="page">Home</a></li>
@@ -61,32 +60,62 @@
           <h2>What Kath offers</h2>
           <p>Placeholder overview. Full service scope still to be confirmed; see the About &amp; Services page for more detail.</p>
         </div>
-        <div class="card-grid card-grid-3">
-          <div class="card">
-            <h3>Ministry Supervision</h3>
-            <p>
-              Dedicated, confidential supervision for church leaders and
-              ministry workers. A space to reflect, process, and be
-              supported in the particular demands of leading in ministry.
-            </p>
+        <!--
+          On mobile (below the breakpoint set in js/main.js's
+          initOfferingsCarousel call), this becomes a one-at-a-time
+          carousel, same component as the Services carousel on
+          about.html, so three long cards don't turn into a wall of
+          scrolling. Above that breakpoint it's the plain 3-column grid
+          it always was; the JS adds/removes carousel behaviour as the
+          viewport crosses the breakpoint, so nothing else needs to
+          change here as more offerings are added later.
+        -->
+        <div class="carousel" id="offerings-carousel">
+          <button type="button" class="carousel-arrow carousel-arrow-prev" aria-label="Previous offering" hidden>
+            <span aria-hidden="true">&#8249;</span>
+          </button>
+
+          <div class="carousel-viewport">
+            <ul class="carousel-track card-grid card-grid-3" id="offerings-track">
+              <li class="carousel-slide">
+                <div class="card card-compact">
+                  <h3>Ministry Supervision</h3>
+                  <p>
+                    Dedicated, confidential supervision for church leaders and
+                    ministry workers. A space to reflect, process, and be
+                    supported in the particular demands of leading in ministry.
+                  </p>
+                </div>
+              </li>
+              <li class="carousel-slide">
+                <div class="card card-compact">
+                  <h3>Individual Counselling</h3>
+                  <p>
+                    Placeholder: general one-to-one counselling support for a
+                    range of personal, relational, and life-stage concerns.
+                    Full scope of practice to be confirmed.
+                  </p>
+                </div>
+              </li>
+              <li class="carousel-slide">
+                <div class="card card-compact">
+                  <h3>A Gentle First Step</h3>
+                  <p>
+                    Not sure where to start? An initial conversation is simply a
+                    chance to talk and see if this feels like the right fit, with
+                    no pressure attached.
+                  </p>
+                </div>
+              </li>
+            </ul>
           </div>
-          <div class="card">
-            <h3>Individual Counselling</h3>
-            <p>
-              Placeholder: general one-to-one counselling support for a
-              range of personal, relational, and life-stage concerns.
-              Full scope of practice to be confirmed.
-            </p>
-          </div>
-          <div class="card">
-            <h3>A Gentle First Step</h3>
-            <p>
-              Not sure where to start? An initial conversation is simply a
-              chance to talk and see if this feels like the right fit, with
-              no pressure attached.
-            </p>
-          </div>
+
+          <button type="button" class="carousel-arrow carousel-arrow-next" aria-label="Next offering" hidden>
+            <span aria-hidden="true">&#8250;</span>
+          </button>
         </div>
+
+        <div class="carousel-dots" id="offerings-dots" aria-label="Offering pages" hidden></div>
       </div>
     </section>
 
@@ -100,15 +129,15 @@
         <div class="trust-strip">
           <div class="trust-item">
             <h3>Confidential by default</h3>
-            <p>What you share stays between you and Kath, within the usual professional and legal limits, which will always be explained clearly.</p>
+            <p>What you share stays between you and Kath, within the usual professional and legal limits.</p>
           </div>
           <div class="trust-item">
             <h3>No pressure, no obligation</h3>
-            <p>An initial enquiry doesn't commit you to anything. It's simply an invitation to start a conversation.</p>
+            <p>An initial enquiry doesn't commit you to anything.</p>
           </div>
           <div class="trust-item">
             <h3>At your own pace</h3>
-            <p>You're welcome to share as much or as little as feels comfortable, whenever you feel ready.</p>
+            <p>Share as much or as little as feels comfortable, whenever you're ready.</p>
           </div>
         </div>
       </div>

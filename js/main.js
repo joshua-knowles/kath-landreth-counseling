@@ -6,6 +6,7 @@ document.addEventListener("DOMContentLoaded", function () {
   initContactForm();
   initFooterYear();
   initServicesCarousel();
+  initOfferingsCarousel();
   initHoverOutlineTiming();
 });
 
@@ -109,15 +110,21 @@ function showStatus(el, message, kind) {
   el.setAttribute("role", "status");
 }
 
-// Services carousel (about.html). Circular: slide position is always the
-// shortest signed distance from the current slide, so "next" from the
-// last slide wraps to the first and vice versa, forever. Without this
-// script the markup falls back to the plain .card-grid layout (see
-// css/style.css), so nothing here is required for the content to be
-// readable.
-function initServicesCarousel() {
-  var root = document.getElementById("services-carousel");
-  var dotsContainer = document.getElementById("services-dots");
+// Shared carousel engine behind both the Services carousel (about.html,
+// always on) and the Home page's "What Kath offers" carousel (mobile
+// only). Circular: slide position is always the shortest signed
+// distance from the current slide, so "next" from the last slide wraps
+// to the first and vice versa, forever. Without this script the markup
+// falls back to the plain .card-grid layout (see css/style.css), so
+// nothing here is required for the content to be readable.
+//
+// config.mobileBreakpoint (optional, px): when set, the carousel only
+// activates below that width (matchMedia, rechecked on resize) and
+// tears itself back down to the plain grid above it. Omit it for a
+// carousel that should always be active, regardless of viewport width.
+function setupCarousel(config) {
+  var root = document.getElementById(config.rootId);
+  var dotsContainer = document.getElementById(config.dotsId);
   if (!root || !dotsContainer) return;
 
   var track = root.querySelector(".carousel-track");
@@ -126,16 +133,18 @@ function initServicesCarousel() {
   var nextBtn = root.querySelector(".carousel-arrow-next");
   if (!track || slides.length < 2 || !prevBtn || !nextBtn) return;
 
+  var itemLabel = config.itemLabel || "item";
   var SLIDE_GAP = 32; // px between slide centres, on top of slide width
   var current = 0;
   var step = 0;
+  var enabled = false;
   var dots = [];
 
   slides.forEach(function (slide, i) {
     var dot = document.createElement("button");
     dot.type = "button";
     dot.className = "carousel-dot";
-    dot.setAttribute("aria-label", "Go to service " + (i + 1) + " of " + slides.length);
+    dot.setAttribute("aria-label", "Go to " + itemLabel + " " + (i + 1) + " of " + slides.length);
     dot.addEventListener("click", function () {
       goTo(i);
     });
@@ -184,8 +193,55 @@ function initServicesCarousel() {
   function goTo(index) {
     var total = slides.length;
     current = ((index % total) + total) % total;
+    if (!enabled) return;
     measure();
     render();
+  }
+
+  // enable()/disable() flip the carousel on and off; used directly by
+  // the always-on carousel, and by applyMode() below for the
+  // mobile-only one as the viewport crosses its breakpoint.
+  function enable() {
+    if (enabled) return;
+    enabled = true;
+    root.classList.add("is-carousel");
+    prevBtn.hidden = false;
+    nextBtn.hidden = false;
+    dotsContainer.hidden = false;
+  }
+
+  function disable() {
+    if (!enabled) return;
+    enabled = false;
+    root.classList.remove("is-carousel");
+    prevBtn.hidden = true;
+    nextBtn.hidden = true;
+    dotsContainer.hidden = true;
+    // Clear the inline height measure() sets — otherwise it lingers and
+    // squashes the plain .card-grid fallback layout once the carousel
+    // classes stop applying.
+    track.style.height = "";
+  }
+
+  function applyMode() {
+    if (!config.mobileBreakpoint) {
+      enable();
+      return;
+    }
+    var isMobile = window.matchMedia("(max-width: " + config.mobileBreakpoint + "px)").matches;
+    if (isMobile) {
+      enable();
+    } else {
+      disable();
+    }
+  }
+
+  function refresh() {
+    applyMode();
+    if (enabled) {
+      measure();
+      render();
+    }
   }
 
   prevBtn.addEventListener("click", function () {
@@ -206,18 +262,30 @@ function initServicesCarousel() {
     }
   });
 
+  var resizeTimer;
   window.addEventListener("resize", function () {
-    measure();
-    render();
+    window.clearTimeout(resizeTimer);
+    resizeTimer = window.setTimeout(refresh, 150);
   });
 
-  root.classList.add("is-carousel");
-  prevBtn.hidden = false;
-  nextBtn.hidden = false;
-  dotsContainer.hidden = false;
+  refresh();
+}
 
-  measure();
-  render();
+function initServicesCarousel() {
+  setupCarousel({
+    rootId: "services-carousel",
+    dotsId: "services-dots",
+    itemLabel: "service",
+  });
+}
+
+function initOfferingsCarousel() {
+  setupCarousel({
+    rootId: "offerings-carousel",
+    dotsId: "offerings-dots",
+    itemLabel: "offering",
+    mobileBreakpoint: 640,
+  });
 }
 
 // Sizes the hover-outline sweep (see css/style.css's "Animated hover

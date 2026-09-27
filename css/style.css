@@ -174,6 +174,23 @@ code {
   gap: 0.9rem;
 }
 
+@media (max-width: 560px) {
+  /* Keep button pairs side by side on phones instead of stacking:
+     shrink padding/font just enough that two buttons fit one row. */
+  .btn-group {
+    flex-wrap: nowrap;
+    gap: 0.6rem;
+  }
+
+  .btn-group .btn {
+    flex: 1 1 0;
+    min-width: 0;
+    padding: 0.75em 0.6em;
+    font-size: 0.88rem;
+    text-align: center;
+  }
+}
+
 /* --- Header / Nav --- */
 .site-header {
   background: var(--color-bg);
@@ -212,14 +229,13 @@ code {
 .nav-toggle {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
+  justify-content: center;
   background: transparent;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
-  padding: 0.5em 0.8em;
-  font-family: var(--font-body);
-  font-size: 0.95rem;
-  color: var(--color-text);
+  width: 44px;
+  height: 44px;
+  padding: 0;
   cursor: pointer;
 }
 
@@ -311,6 +327,14 @@ code {
   background: linear-gradient(180deg, var(--color-bg-alt) 0%, var(--color-bg) 100%);
 }
 
+@media (max-width: 640px) {
+  /* Sticky header already anchors the top of the page; a full 4rem of
+     extra padding above the eyebrow pill just pushes content down. */
+  .hero {
+    padding-top: 1.5rem;
+  }
+}
+
 .hero-inner {
   display: grid;
   gap: 2.5rem;
@@ -362,9 +386,30 @@ code {
   box-shadow: 0 10px 28px rgba(59, 53, 46, 0.14);
 }
 
+@media (max-width: 640px) {
+  /* This is still just placeholder text in a box, so on phones it
+     shrinks to a short banner strip instead of a near-square block
+     that eats most of the first screen. Widen this back out (or
+     remove the override) once a real photo replaces the placeholder. */
+  .hero-image-slot {
+    aspect-ratio: 21 / 9;
+    padding: 1rem;
+    font-size: 0.8rem;
+  }
+}
+
 /* --- Generic sections --- */
 .section {
   padding: 3.5rem 0;
+}
+
+@media (max-width: 640px) {
+  /* Full desktop padding between every stacked section adds up to a
+     lot of dead scrolling on phones, where sections stack in a single
+     column anyway. */
+  .section {
+    padding: 2.25rem 0;
+  }
 }
 
 .section-alt {
@@ -475,12 +520,36 @@ code {
   margin-bottom: 0;
 }
 
-/* --- Services carousel ---
-   Base rules (no JS-active class) intentionally match the plain
-   .card-grid layout, so the services list stays fully visible and
-   readable if JavaScript fails to load. js/main.js adds "is-carousel"
-   to #services-carousel once it initialises, which is what switches
-   the track over to absolute-positioned, circular slide layout below. */
+@media (max-width: 640px) {
+  /* Used on the Home page's "What Kath offers" cards, which become a
+     carousel on mobile (see initOfferingsCarousel in js/main.js).
+     Full desktop type size made each card's own carousel slide (and
+     therefore the whole carousel, which sizes itself to the tallest
+     slide) taller than it needs to be; a smaller, tighter card keeps
+     the same compact-rectangle feel the grid has on desktop. */
+  .card-compact {
+    padding: 1.25rem;
+  }
+
+  .card-compact h3 {
+    font-size: 1.05rem;
+  }
+
+  .card-compact p {
+    font-size: 0.92rem;
+  }
+}
+
+/* --- Carousel (shared component) ---
+   Used by the About & Services page's Services carousel (always on)
+   and the Home page's "What Kath offers" carousel (mobile-only, see
+   initOfferingsCarousel in js/main.js). Base rules (no JS-active
+   class) intentionally match the plain .card-grid layout, so the
+   cards stay fully visible and readable if JavaScript fails to load,
+   or on Home above the mobile breakpoint. JS adds "is-carousel" to the
+   root element once it activates carousel mode, which is what
+   switches the track over to absolute-positioned, circular slide
+   layout below. */
 .carousel-track {
   list-style: none;
   margin: 0;
@@ -491,7 +560,7 @@ code {
   margin: 0;
 }
 
-.services-carousel {
+.carousel {
   position: relative;
 }
 
@@ -540,6 +609,18 @@ code {
   margin-top: 1.75rem;
 }
 
+/* `.carousel-arrow`/`.carousel-dots` set `display` unconditionally, which
+   has the same specificity as the browser's own `[hidden] { display:
+   none }` rule — with equal specificity the later (author) rule wins,
+   so plain `hidden` silently did nothing on these. This bumps the
+   specificity so toggling `hidden` in JS (see setupCarousel in
+   js/main.js) actually hides them, which matters once a carousel can
+   be switched off again (the mobile-only "What Kath offers" one). */
+.carousel-arrow[hidden],
+.carousel-dots[hidden] {
+  display: none;
+}
+
 .carousel-dot {
   width: 10px;
   height: 10px;
@@ -561,7 +642,7 @@ code {
 }
 
 /* Carousel mode: only applied once JS confirms it initialised */
-.services-carousel.is-carousel .carousel-viewport {
+.carousel.is-carousel .carousel-viewport {
   /* overflow-x/overflow-y set to different keywords (e.g. hidden + visible)
      makes browsers resolve "visible" to "auto" per spec, which draws a
      real scrollbar. Keep overflow uniformly hidden instead, and reserve
@@ -588,14 +669,14 @@ code {
   );
 }
 
-.services-carousel.is-carousel .carousel-track {
+.carousel.is-carousel .carousel-track {
   display: block;
   position: relative;
   min-height: 200px;
   transition: height 0.4s ease;
 }
 
-.services-carousel.is-carousel .carousel-slide {
+.carousel.is-carousel .carousel-slide {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -607,13 +688,13 @@ code {
   pointer-events: none;
 }
 
-.services-carousel.is-carousel .carousel-slide.is-active {
+.carousel.is-carousel .carousel-slide.is-active {
   pointer-events: auto;
   z-index: 2;
 }
 
 @media (max-width: 560px) {
-  .services-carousel.is-carousel .carousel-viewport {
+  .carousel.is-carousel .carousel-viewport {
     padding: 16px 2.75rem;
     -webkit-mask-image: linear-gradient(
       to right,
@@ -665,6 +746,16 @@ code {
   color: var(--color-text-muted);
   font-size: 0.95rem;
   margin-bottom: 0;
+}
+
+@media (max-width: 640px) {
+  .trust-strip {
+    gap: 0.5rem;
+  }
+
+  .trust-item {
+    padding: 0.5rem 0;
+  }
 }
 
 /* --- Bio layout --- */
