@@ -48,6 +48,22 @@ body {
   color: var(--color-text);
   line-height: 1.65;
   font-size: 17px;
+  animation: page-fade-in 0.6s ease;
+}
+
+@keyframes page-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body {
+    animation: none;
+  }
 }
 
 img {
@@ -704,6 +720,11 @@ code {
     #000 calc(100% - 70px),
     transparent 100%
   );
+  cursor: grab;
+  /* Let vertical page scroll pass through untouched; horizontal drags
+     are handled entirely by JS pointer events (see setupCarousel in
+     js/main.js) instead of the browser's own touch panning. */
+  touch-action: pan-y;
 }
 
 .carousel.is-carousel .carousel-track {
@@ -711,6 +732,18 @@ code {
   position: relative;
   min-height: 200px;
   transition: height 0.4s ease;
+}
+
+.carousel.is-dragging .carousel-viewport {
+  cursor: grabbing;
+  user-select: none;
+}
+
+.carousel.is-dragging .carousel-slide {
+  /* Track the pointer 1:1 while dragging instead of animating toward
+     it — the transition comes back for the snap/settle once the drag
+     ends and render() sets the final resting position. */
+  transition: none;
 }
 
 .carousel.is-carousel .carousel-slide {

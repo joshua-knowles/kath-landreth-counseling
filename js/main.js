@@ -325,43 +325,82 @@ function setupCarousel(config) {
     resizeTimer = window.setTimeout(refresh, 150);
   });
 
-  // Touch swipe support (config.swipe). Only meaningful on touch
-  // devices — a mouse simply never fires touch events — so this
-  // doesn't need its own viewport-width check on top of that.
+  // Drag/swipe support (config.swipe), via Pointer Events so the same
+  // code handles touch (mobile) and mouse (desktop) alike: the active
+  // card visually follows the pointer while dragging, then either
+  // completes to the next/previous slide or snaps back, depending on
+  // whether it passed SWIPE_THRESHOLD.
   if (config.swipe && viewport) {
-    var touchStartX = 0;
-    var touchStartY = 0;
-    var tracking = false;
     var SWIPE_THRESHOLD = 40; // px
+    var dragging = false;
+    var dragPointerId = null;
+    var dragStartX = 0;
+    var dragStartY = 0;
+    var dragAxis = null; // 'x' once a horizontal drag is confirmed, 'y' to bail out and let the page scroll
 
-    viewport.addEventListener(
-      "touchstart",
-      function (event) {
-        if (!enabled || event.touches.length !== 1) return;
-        tracking = true;
-        touchStartX = event.touches[0].clientX;
-        touchStartY = event.touches[0].clientY;
-      },
-      { passive: true }
-    );
+    function setLiveOffset(deltaX) {
+      var total = slides.length;
+      slides.forEach(function (slide, i) {
+        var distance = ((i - current) % total + total) % total;
+        if (distance > total / 2) distance -= total;
+        slide.style.setProperty("--slide-offset", distance * step + deltaX + "px");
+      });
+    }
 
-    viewport.addEventListener(
-      "touchend",
-      function (event) {
-        if (!tracking) return;
-        tracking = false;
-        var touch = event.changedTouches[0];
-        var deltaX = touch.clientX - touchStartX;
-        var deltaY = touch.clientY - touchStartY;
-        // Ignore drags that are mostly vertical (page scroll) or too
-        // short to be a deliberate swipe.
-        if (Math.abs(deltaX) < SWIPE_THRESHOLD || Math.abs(deltaX) < Math.abs(deltaY)) {
+    viewport.addEventListener("pointerdown", function (event) {
+      if (!enabled || (event.pointerType === "mouse" && event.button !== 0)) return;
+      dragging = true;
+      dragAxis = null;
+      dragPointerId = event.pointerId;
+      dragStartX = event.clientX;
+      dragStartY = event.clientY;
+      root.classList.add("is-dragging");
+      viewport.setPointerCapture(event.pointerId);
+    });
+
+    viewport.addEventListener("pointermove", function (event) {
+      if (!dragging || event.pointerId !== dragPointerId) return;
+      var deltaX = event.clientX - dragStartX;
+      var deltaY = event.clientY - dragStartY;
+
+      if (dragAxis === null) {
+        // Wait for a small, deliberate movement before committing to an
+        // axis, so a slightly wobbly tap doesn't get mistaken for a drag.
+        if (Math.abs(deltaX) < 6 && Math.abs(deltaY) < 6) return;
+        dragAxis = Math.abs(deltaX) > Math.abs(deltaY) ? "x" : "y";
+        if (dragAxis === "y") {
+          // This is a vertical page-scroll gesture, not a carousel drag.
+          dragging = false;
+          root.classList.remove("is-dragging");
           return;
         }
+      }
+      if (dragAxis !== "x") return;
+
+      event.preventDefault();
+      setLiveOffset(deltaX);
+    });
+
+    function endDrag(event) {
+      if (!dragging || event.pointerId !== dragPointerId) return;
+      var deltaX = dragAxis === "x" ? event.clientX - dragStartX : 0;
+      dragging = false;
+      root.classList.remove("is-dragging");
+      if (Math.abs(deltaX) >= SWIPE_THRESHOLD) {
         goTo(deltaX < 0 ? current + 1 : current - 1);
-      },
-      { passive: true }
-    );
+      } else {
+        // Not far enough to count — snap back to the current slide's
+        // resting position (cancelHint() inside goTo() only runs on an
+        // actual index change, so a released-early drag still counts
+        // as "an attempt", which is why it's called explicitly here).
+        cancelHint();
+        measure();
+        render();
+      }
+    }
+
+    viewport.addEventListener("pointerup", endDrag);
+    viewport.addEventListener("pointercancel", endDrag);
 
     // Start the hint loop once the carousel actually scrolls into
     // view, not on page load — a visitor may not reach it (e.g. Home's
