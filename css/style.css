@@ -349,7 +349,7 @@ code {
 
 /* --- Hero --- */
 .hero {
-  padding: 4rem 0 3.5rem;
+  padding: 4rem 0 2rem;
   background: linear-gradient(180deg, var(--color-bg-alt) 0%, var(--color-bg) 100%);
 }
 
@@ -432,6 +432,14 @@ code {
 /* --- Generic sections --- */
 .section {
   padding: 3.5rem 0;
+}
+
+/* Web only: the section right after a hero (most noticeable on
+   Contact & Booking, whose hero has no buttons to fill the trailing
+   space) gets a smaller top padding than sections generally do,
+   closing up the gap between the intro text and whatever follows. */
+.hero + .section {
+  padding-top: 2rem;
 }
 
 @media (max-width: 840px) {
