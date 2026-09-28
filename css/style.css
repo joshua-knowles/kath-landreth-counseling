@@ -224,6 +224,13 @@ code {
   position: sticky;
   top: 0;
   z-index: 50;
+  /* iOS Safari has a longstanding bug where a sticky element's paint
+     lags behind its actual (correct) position while the address bar
+     is collapsing/expanding mid-scroll, leaving a gap that briefly
+     shows the page scrolling underneath. Promoting it to its own
+     compositor layer is the standard fix — it stops relying on Safari
+     to repaint the sticky element in step with the toolbar animation. */
+  transform: translateZ(0);
 }
 
 .nav-bar {
