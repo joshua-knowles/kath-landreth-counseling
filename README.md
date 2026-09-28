@@ -30,10 +30,10 @@ small dependency-free PowerShell static file server for local preview
 only (it is never deployed):
 
 ```powershell
-powershell -File scripts/serve.ps1 -Port 5180
+powershell -File scripts/serve.ps1 -Port 5185
 ```
 
-Then open `http://localhost:5180` in a browser.
+Then open `http://localhost:5185` in a browser.
 
 ## Design system
 
