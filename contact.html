@@ -79,6 +79,27 @@
             method="POST"
             novalidate
           >
+            <!--
+              Faux submit animation (see initContactForm/playSubmitSuccess
+              in js/main.js and the "Submit animation" block in
+              css/style.css): on successful submission, .form-fields
+              fades out and this overlay fades in — grey spinner + a
+              "Submitting" label, then the container fades to green
+              while the spinner and label fade to white, then the
+              spinner closes into a checkmark and the label switches to
+              "Submitted". Decorative only; the real fetch result still
+              controls whether this plays at all (see the JS).
+            -->
+            <div class="form-submit-overlay" aria-hidden="true">
+              <span class="submit-overlay-label">Submitting</span>
+              <svg class="submit-icon" viewBox="0 0 48 48" width="48" height="48">
+                <circle class="submit-icon-arc" cx="24" cy="24" r="18" fill="none" stroke-width="4" />
+                <circle class="submit-icon-circle" cx="24" cy="24" r="18" fill="none" stroke-width="4" />
+                <path class="submit-icon-check" d="M15 25 L21 31 L33 17" fill="none" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </div>
+
+            <div class="form-fields">
             <div class="form-row">
               <label for="name">Your name</label>
               <input type="text" id="name" name="name" autocomplete="name" required />
@@ -151,6 +172,7 @@
             </p>
 
             <div class="form-status" id="form-status" role="status" aria-live="polite"></div>
+            </div>
           </form>
         </div>
 

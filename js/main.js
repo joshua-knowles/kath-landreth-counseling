@@ -80,8 +80,64 @@ function initContactForm() {
   });
 }
 
+// Faux (decorative) submit-loading sequence — see the "Submit
+// animation" block in css/style.css for the actual visual choreography
+// (grey spinner + "Submitting" label, fading to the site's green with
+// a white spinner, then closing into a checkmark labelled "Submitted").
+// Timing is fixed, not tied to how long the real request actually
+// takes, since it's meant to feel like a deliberate little moment
+// rather than a literal progress indicator — but it still defers to an
+// already-known failure rather than ever showing a false "Submitted".
 function submitViaFetch(form, status) {
   var data = new FormData(form);
+  var label = form.querySelector(".submit-overlay-label");
+  var outcome = null; // 'ok' | 'error', set once the real fetch resolves
+  var settled = false;
+  var timers = [];
+
+  function schedule(fn, delay) {
+    timers.push(window.setTimeout(fn, delay));
+  }
+
+  function showError() {
+    if (settled) return;
+    settled = true;
+    timers.forEach(window.clearTimeout);
+    form.classList.remove("is-submitting", "is-success");
+    showStatus(
+      status,
+      "Something went wrong sending your message. Please try again, or email directly using the details on this page.",
+      "error"
+    );
+  }
+
+  function maybeShowErrorNow() {
+    // Only worth interrupting immediately if the loading visuals
+    // haven't started yet — once they have, the scheduled checks below
+    // handle reverting at the right beat instead of jarringly cutting
+    // the animation off mid-flight.
+    if (!form.classList.contains("is-submitting") && !form.classList.contains("is-success")) {
+      showError();
+    }
+  }
+
+  schedule(function () {
+    if (outcome === "error") return;
+    form.classList.add("is-submitting");
+  }, 500);
+
+  schedule(function () {
+    if (outcome === "error") {
+      showError();
+      return;
+    }
+    form.classList.remove("is-submitting");
+    form.classList.add("is-success");
+    settled = true;
+    schedule(function () {
+      if (label) label.textContent = "Submitted";
+    }, 1500);
+  }, 1800);
 
   fetch(form.action, {
     method: "POST",
@@ -90,26 +146,16 @@ function submitViaFetch(form, status) {
   })
     .then(function (response) {
       if (response.ok) {
+        outcome = "ok";
         form.reset();
-        showStatus(
-          status,
-          "Thank you — your message has been sent. Kath (or her team) will be in touch soon.",
-          "success"
-        );
       } else {
-        showStatus(
-          status,
-          "Something went wrong sending your message. Please try again, or email directly using the details on this page.",
-          "error"
-        );
+        outcome = "error";
+        maybeShowErrorNow();
       }
     })
     .catch(function () {
-      showStatus(
-        status,
-        "Something went wrong sending your message. Please try again, or email directly using the details on this page.",
-        "error"
-      );
+      outcome = "error";
+      maybeShowErrorNow();
     });
 }
 
