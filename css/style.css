@@ -1060,14 +1060,19 @@ code {
 
 /* --- Submit animation ---
    Faux (decorative, not tied to real network timing) loading sequence
-   played on successful submission — see playSubmitSuccess in
-   js/main.js for the class/timing choreography. .form-fields (every
-   normal field, the submit button, the privacy notes) fades out and
+   played on successful submission — see submitViaFetch in js/main.js
+   for the class/timing choreography. .form-fields (every normal
+   field, the submit button, the privacy notes) fades out and
    .form-submit-overlay fades in showing a spinning grey arc and a
    "Submitting" label; the container then fades to the site's green
    while the arc and label fade to white; the arc then closes into a
    full circle and a checkmark draws inside it, and the label switches
-   to "Submitted" (that text swap is plain JS, not animated). */
+   to "Submitted" (that text swap is plain JS, not animated). Once the
+   checkmark has visibly finished landing, .submit-success-group (the
+   label + icon) rises slightly and .submit-followup-wrap grows open
+   beneath it, fading in a short "what happens next" message — the
+   group's rise isn't its own transition, it falls out of the overlay's
+   flex column staying centred as the wrap grows from 0 to full height. */
 .form-fields {
   transition: opacity 0.4s ease;
 }
@@ -1099,6 +1104,13 @@ code {
 .contact-form.is-submitting .form-submit-overlay,
 .contact-form.is-success .form-submit-overlay {
   opacity: 1;
+}
+
+.submit-success-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
 }
 
 .submit-overlay-label {
@@ -1164,9 +1176,45 @@ code {
   opacity: 1;
 }
 
+/* Grid's fr-unit trick for animating from a 0 to an auto height,
+   without JS having to measure the text first: the wrap is the grid
+   (one row, sized 0fr), the paragraph is the sole row/grid item and
+   needs its own overflow:hidden for the 0fr state to actually clip it. */
+.submit-followup-wrap {
+  display: grid;
+  grid-template-rows: 0fr;
+  width: 100%;
+  transition: grid-template-rows 0.5s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.contact-form.is-submitted .submit-followup-wrap {
+  grid-template-rows: 1fr;
+}
+
+.submit-followup {
+  overflow: hidden;
+  margin: 0;
+  padding: 0 1.5rem;
+  max-width: 34ch;
+  margin-inline: auto;
+  text-align: center;
+  font-size: 0.95rem;
+  color: #fff;
+  opacity: 0;
+  transition: opacity 0.4s ease 0.15s;
+}
+
+.contact-form.is-submitted .submit-followup {
+  opacity: 1;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .submit-icon-arc {
     animation: none;
+  }
+
+  .submit-followup-wrap {
+    transition-duration: 0.001s;
   }
 }
 

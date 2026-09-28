@@ -136,6 +136,13 @@ function submitViaFetch(form, status) {
     settled = true;
     schedule(function () {
       if (label) label.textContent = "Submitted";
+      // A beat after the checkmark has visibly finished drawing in
+      // (see .submit-icon-check's own transition-delay in css/style.css)
+      // rather than the instant it starts, so the follow-up text reads
+      // as a reaction to the checkmark landing, not simultaneous with it.
+      schedule(function () {
+        form.classList.add("is-submitted");
+      }, 500);
     }, 1500);
   }, 1800);
 
