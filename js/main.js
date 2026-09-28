@@ -104,6 +104,7 @@ function submitViaFetch(form, status) {
     settled = true;
     timers.forEach(window.clearTimeout);
     form.classList.remove("is-submitting", "is-success");
+    form.style.height = "";
     showStatus(
       status,
       "Something went wrong sending your message. Please try again, or email directly using the details on this page.",
@@ -121,10 +122,41 @@ function submitViaFetch(form, status) {
     }
   }
 
+  // Mobile only: with every field showing, the form is tall enough that
+  // the loading/success sequence below can end up playing out well
+  // below the visitor's scroll position (e.g. if they submit from right
+  // near the button at the bottom). Freezing the current height inline
+  // then shrinking to a compact fixed one gives the height change
+  // something to transition from — height can't transition from auto —
+  // and scrolling to the now-smaller form's centre brings it into view
+  // before the loading beat below actually begins. The target scroll
+  // position is worked out from the form's CURRENT (pre-shrink) top plus
+  // the known collapsed height, rather than from scrollIntoView/
+  // getBoundingClientRect once the shrink has started: height is a
+  // layout property, so those keep reporting the live, still-mid-
+  // transition size rather than the eventual one, which undershoots the
+  // scroll target by however much the form still had left to shrink.
+  var startDelay = 0;
+  if (window.matchMedia("(max-width: 840px)").matches) {
+    var COLLAPSED_HEIGHT = 400; // px — fits the tallest overlay state (checkmark + label + follow-up text) on narrow widths
+    var formTop = form.getBoundingClientRect().top + window.scrollY;
+    var targetScrollY = formTop + COLLAPSED_HEIGHT / 2 - window.innerHeight / 2;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      form.style.height = COLLAPSED_HEIGHT + "px";
+      window.scrollTo({ top: targetScrollY });
+    } else {
+      form.style.height = form.getBoundingClientRect().height + "px";
+      void form.offsetHeight;
+      form.style.height = COLLAPSED_HEIGHT + "px";
+      window.scrollTo({ top: targetScrollY, behavior: "smooth" });
+      startDelay = 500; // rough settle time for the shrink + smooth-scroll before the loading beat starts
+    }
+  }
+
   schedule(function () {
     if (outcome === "error") return;
     form.classList.add("is-submitting");
-  }, 500);
+  }, startDelay + 500);
 
   schedule(function () {
     if (outcome === "error") {
@@ -144,7 +176,7 @@ function submitViaFetch(form, status) {
         form.classList.add("is-submitted");
       }, 500);
     }, 1500);
-  }, 1800);
+  }, startDelay + 1800);
 
   fetch(form.action, {
     method: "POST",
