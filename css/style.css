@@ -553,18 +553,6 @@ code {
   padding: 1.75rem;
   box-shadow: var(--shadow-soft);
   transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.2s ease;
-  /* Some cards (e.g. Home's "What Kath offers") are <a> elements, not
-     <div>s — these three keep the whole card looking and behaving the
-     same regardless of which tag it is: block layout instead of an
-     anchor's default inline, and no link-blue text/underline bleeding
-     into the heading or body copy. -webkit-user-drag backs up the
-     draggable="false" HTML attribute already on these links — without
-     both, Safari/WebKit can still hijack a drag gesture into its own
-     native link-drag instead of the carousel's swipe/drag handling. */
-  display: block;
-  color: inherit;
-  text-decoration: none;
-  -webkit-user-drag: none;
 }
 
 .card:hover {
@@ -578,6 +566,26 @@ code {
 
 .card p:last-child {
   margin-bottom: 0;
+}
+
+/* Clickable cards (e.g. Home's "What Kath offers") wrap only their
+   heading in a link, then stretch it over the full card with ::after
+   so the whole card is clickable — not just the heading text. The
+   animated hover-outline ring above needs to live on .card itself
+   rather than the <a>: browsers don't animate a transition on a
+   registered custom property (--outline-pct) when it's declared on a
+   focusable element, they just snap straight to the end value instead
+   of sweeping. Keeping the link non-card-sized sidesteps that. */
+.card-link {
+  color: inherit;
+  text-decoration: none;
+  -webkit-user-drag: none;
+}
+
+.card-link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
 }
 
 @media (max-width: 840px) {
